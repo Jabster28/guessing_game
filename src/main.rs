@@ -17,10 +17,12 @@ fn main() {
     let mut guessed_chars: Vec<char> = vec![' '];
     let mut guesses_left = 3;
     loop {
-        #[cfg(windows)]
-        std::process::Command::new("cls").status().unwrap();
-        #[cfg(unix)]
-        std::process::Command::new("clear").status().unwrap();
+        match std::process::Command::new("clear").status() {
+            Ok(_) => {}
+            Err(_) => {
+                println!("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+            }
+        }
 
         if guesses_left == 0 {
             println!("You lost! The phrase was: '{}'", secret_phrase);
