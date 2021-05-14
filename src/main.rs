@@ -1,20 +1,19 @@
 use std::io::{self, Write};
 use std::iter::FromIterator;
-use std::{thread, time};
 
 fn main() {
     println!("Guess the phrase!");
-    let dur = time::Duration::from_millis(1500);
     print!("Please input the phrase: ");
     io::stdout().flush().unwrap();
     let mut guessed: bool;
+    let mut err = "".to_string();
     let mut secret = String::new();
     io::stdin()
         .read_line(&mut secret)
         .expect("Failed to read line");
 
     let secret_phrase = secret.trim();
-    let mut guessed_chars: Vec<char> = vec![' '];
+    let mut guessed_chars = vec![' '];
     let mut guesses_left = 3;
     loop {
         match std::process::Command::new("clear").status() {
@@ -23,6 +22,8 @@ fn main() {
                 println!("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             }
         }
+        println!("{}", err);
+        err = "".to_string();
 
         if guesses_left == 0 {
             println!("You lost! The phrase was: '{}'", secret_phrase);
@@ -55,7 +56,17 @@ fn main() {
             println!("You won!");
             break;
         }
-        print!("You have {} guesses left, input your guess: ", guesses_left);
+        if guessed_chars.len() > 1 {
+            println!(
+                "Current guesses:{}",
+                guessed_chars
+                    .iter()
+                    .map(|h| { h.to_string() })
+                    .collect::<Vec<String>>()
+                    .join(" ")
+            );
+        };
+        print!("You have {} guess left, input your guess: ", guesses_left);
         io::stdout().flush().unwrap();
 
         let mut guess = String::new();
@@ -66,8 +77,7 @@ fn main() {
         let current_guess: char = match (guess.trim().chars().collect::<Vec<char>>()).first() {
             Some(e) => *e,
             None => {
-                println!("You need to type a letter!");
-                thread::sleep(dur);
+                err = "You need to type a letter!".to_string();
                 ' '
             }
         };
@@ -75,8 +85,7 @@ fn main() {
             continue;
         };
         if guessed_chars.iter().any(|f| f == &current_guess) {
-            println!("You already guessed this letter!");
-            thread::sleep(dur);
+            err = "You already guessed this letter!".to_string();
             continue;
         }
         if secret_phrase
@@ -86,10 +95,10 @@ fn main() {
             .any(|f| f.to_ascii_lowercase() == current_guess.to_ascii_lowercase())
         {
         } else {
-            println!("Nope!");
-            thread::sleep(dur);
+            err = format!("Nope, \"{}\" isn't there", current_guess);
             guesses_left -= 1
         };
+        guessed_chars.sort();
         guessed_chars.push(current_guess);
     }
 }
