@@ -1,6 +1,8 @@
-use std::io::{self, Write};
 use std::iter::FromIterator;
-
+use std::{
+    io::{self, Write},
+    ptr::null,
+};
 fn main() {
     println!("Guess the phrase!");
     print!("Please input the phrase: ");
@@ -19,7 +21,13 @@ fn main() {
         match std::process::Command::new("clear").status() {
             Ok(_) => {}
             Err(_) => {
-                println!("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                // str.repeat wasn't working
+                match std::process::Command::new("cls").status() {
+                    Ok(_) => {}
+                    Err(_) => {
+                        println!("{}", "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                    }
+                }
             }
         }
         println!("{}", err);
