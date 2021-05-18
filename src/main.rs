@@ -1,8 +1,5 @@
+use std::io::{self, Write};
 use std::iter::FromIterator;
-use std::{
-    io::{self, Write},
-    ptr::null,
-};
 fn main() {
     println!("Guess the phrase!");
     print!("Please input the phrase: ");
