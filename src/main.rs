@@ -1,7 +1,81 @@
+use billboard::Billboard;
 use std::io::{self, Write};
 use std::iter::FromIterator;
 fn main() {
-    println!("Guess the phrase!");
+    let hang = vec![
+        "
+  +---+
+  |   |
+      |
+      |
+      |
+      |
+=========",
+        "
+  +---+
+  |   |
+  O   |
+      |
+      |
+      |
+=========",
+        "
+  +---+
+  |   |
+  O   |
+  |   |
+      |
+      |
+=========",
+        "
+  +---+
+  |   |
+  O   |
+ /|   |
+      |
+      |
+=========",
+        "
+  +---+
+  |   |
+  O   |
+ /|\\  |
+      |
+      |
+=========",
+        "
+  +---+
+  |   |
+  O   |
+ /|\\  |
+ /    |
+      |
+=========",
+        "
+  +---+
+  |   |
+  O   |
+ /|\\  |
+ / \\  |
+      |
+=========",
+    ];
+    fn clr() {
+        match std::process::Command::new("clear").status() {
+            Ok(_) => {}
+            Err(_) => {
+                match std::process::Command::new("cls").status() {
+                    Ok(_) => {}
+                    Err(_) => {
+                        // str.repeat wasn't working soooooo
+                        println!("{}", "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                    }
+                }
+            }
+        }
+    }
+    clr();
+    Billboard::default().display("WELCOME TO GUESS THAT PHRASE!!!");
     print!("Please input the phrase: ");
     io::stdout().flush().unwrap();
     let mut guessed: bool;
@@ -13,29 +87,19 @@ fn main() {
 
     let secret_phrase = secret.trim();
     let mut guessed_chars = vec![' '];
-    let mut guesses_left = 3;
+    let mut guesses_left = 6;
     loop {
-        match std::process::Command::new("clear").status() {
-            Ok(_) => {}
-            Err(_) => {
-                // str.repeat wasn't working
-                match std::process::Command::new("cls").status() {
-                    Ok(_) => {}
-                    Err(_) => {
-                        println!("{}", "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-                    }
-                }
-            }
-        }
+        clr();
         println!("{}", err);
         err = "".to_string();
 
         if guesses_left == 0 {
+            println!("{}", hang[6]);
             println!("You lost! The phrase was: '{}'", secret_phrase);
             break;
         }
         guessed = true;
-        println!(
+        Billboard::default().display(&format!(
             "{}",
             String::from_iter(
                 secret_phrase
@@ -47,25 +111,34 @@ fn main() {
                             .iter()
                             .any(|i| i.to_ascii_lowercase() == x.to_ascii_lowercase())
                         {
-                            x
+                            format!("{} ", x.to_string())
                         } else {
                             {
                                 guessed = false;
-                                &'_'
+                                "_ ".to_string()
                             }
                         }
                     })
             )
-        );
+        ));
+        println!("{}", hang[6 - guesses_left]);
+
         if guessed {
             println!("You won!");
             break;
         }
         if guessed_chars.len() > 1 {
             println!(
-                "Current guesses:{}",
+                "Incorrect guesses:{}",
                 guessed_chars
                     .iter()
+                    .filter(|&e| {
+                        !secret_phrase
+                            .chars()
+                            .collect::<Vec<char>>()
+                            .iter()
+                            .any(|f| f == e)
+                    })
                     .map(|h| { h.to_string() })
                     .collect::<Vec<String>>()
                     .join(" ")
