@@ -97,27 +97,24 @@ fn main() {
             break;
         }
         guessed = true;
-        Billboard::default().display(&format!(
-            "{}",
-            String::from_iter(
-                secret_phrase
-                    .chars()
-                    .collect::<Vec<char>>()
-                    .iter()
-                    .map(|x| {
-                        if guessed_chars
-                            .iter()
-                            .any(|i| i.to_ascii_lowercase() == x.to_ascii_lowercase())
+        Billboard::default().display(&String::from_iter(
+            secret_phrase
+                .chars()
+                .collect::<Vec<char>>()
+                .iter()
+                .map(|x| {
+                    if guessed_chars
+                        .iter()
+                        .any(|i| i.to_ascii_lowercase() == x.to_ascii_lowercase())
+                    {
+                        format!("{} ", x.to_string())
+                    } else {
                         {
-                            format!("{} ", x.to_string())
-                        } else {
-                            {
-                                guessed = false;
-                                "_ ".to_string()
-                            }
+                            guessed = false;
+                            "_ ".to_string()
                         }
-                    })
-            )
+                    }
+                }),
         ));
         println!("{}", hang[6 - guesses_left]);
 
@@ -174,7 +171,6 @@ fn main() {
             err = format!("Nope, \"{}\" isn't there", current_guess);
             guesses_left -= 1
         };
-        guessed_chars.sort();
         guessed_chars.push(current_guess);
     }
 }
