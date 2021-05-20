@@ -1,5 +1,6 @@
 use billboard::Billboard;
 use std::io::{self, Write};
+use std::iter;
 use std::iter::FromIterator;
 fn main() {
     let hang = vec![
@@ -63,15 +64,12 @@ fn main() {
     fn clr() {
         match std::process::Command::new("clear").status() {
             Ok(_) => {}
-            Err(_) => {
-                match std::process::Command::new("cls").status() {
-                    Ok(_) => {}
-                    Err(_) => {
-                        // str.repeat wasn't working soooooo
-                        println!("{}", "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-                    }
+            Err(_) => match std::process::Command::new("cls").status() {
+                Ok(_) => {}
+                Err(_) => {
+                    println!("{}", iter::repeat("\n").take(80).collect::<String>())
                 }
-            }
+            },
         }
     }
     clr();
